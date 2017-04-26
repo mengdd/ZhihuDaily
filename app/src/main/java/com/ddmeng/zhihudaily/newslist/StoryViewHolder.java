@@ -13,7 +13,7 @@ import butterknife.ButterKnife;
 
 public class StoryViewHolder extends RecyclerView.ViewHolder {
     public static final String TAG = "StoryViewHolder";
-    @BindView(R.id.title)
+    @BindView(R.id.story_title)
     TextView titleView;
 
     public StoryViewHolder(View itemView) {

@@ -4,8 +4,10 @@ package com.ddmeng.zhihudaily.newslist;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +24,8 @@ public class NewsListFragment extends Fragment implements NewsListContract.View 
 
     public static final String TAG = "NewsListFragment";
 
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
     @BindView(R.id.news_list)
     RecyclerView newsList;
 
@@ -46,9 +50,12 @@ public class NewsListFragment extends Fragment implements NewsListContract.View 
 
     @Override
     public void initViews() {
+        toolbar.setTitle(R.string.home);
+        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+        setHasOptionsMenu(true);
+        newsList.setLayoutManager(new LinearLayoutManager(getContext()));
         newsListAdapter = new NewsListAdapter();
         newsList.setAdapter(newsListAdapter);
-        newsList.setLayoutManager(new LinearLayoutManager(getContext()));
     }
 
     @Override
