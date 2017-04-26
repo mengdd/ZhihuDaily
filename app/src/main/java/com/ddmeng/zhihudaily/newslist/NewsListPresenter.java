@@ -14,6 +14,14 @@ public class NewsListPresenter implements NewsListContract.Presenter {
     public static final String TAG = "NewsListPresenter";
     private NewsListContract.View view;
 
+    @Override
+    public void init() {
+        if (view != null) {
+            view.initViews();
+        }
+    }
+
+    @Override
     public void fetchLatestNews() {
         ZhihuService service = ServiceGenerator.createService(ZhihuService.class);
         service.getLatestNews()
@@ -23,6 +31,9 @@ public class NewsListPresenter implements NewsListContract.Presenter {
                     @Override
                     public void onNext(@NonNull DailyNews dailyNews) {
                         LogUtils.d(TAG, "onNext: " + dailyNews.getDate());
+                        if (view != null) {
+                            view.setDailyNews(dailyNews);
+                        }
 
                     }
 
