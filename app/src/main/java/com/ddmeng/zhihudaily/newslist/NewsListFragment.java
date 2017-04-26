@@ -13,7 +13,10 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.ddmeng.zhihudaily.R;
+import com.ddmeng.zhihudaily.ZhihuDailyApplication;
 import com.ddmeng.zhihudaily.data.models.DailyNews;
+import com.ddmeng.zhihudaily.imageloader.ImageLoader;
+import com.ddmeng.zhihudaily.imageloader.ImageLoaderFactory;
 import com.ddmeng.zhihudaily.utils.LogUtils;
 
 import butterknife.BindView;
@@ -32,6 +35,7 @@ public class NewsListFragment extends Fragment implements NewsListContract.View 
 
     private NewsListContract.Presenter presenter;
     private NewsListAdapter newsListAdapter;
+    private ImageLoader imageLoader;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -42,6 +46,9 @@ public class NewsListFragment extends Fragment implements NewsListContract.View 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         ButterKnife.bind(this, view);
+        ImageLoaderFactory imageLoaderFactory = ((ZhihuDailyApplication) getActivity()
+                .getApplication()).getMainComponent().getImageLoaderFactory();
+        imageLoader = imageLoaderFactory.createImageLoader(this);
         presenter = new NewsListPresenter();
         presenter.attachView(this);
         presenter.init();
@@ -54,7 +61,7 @@ public class NewsListFragment extends Fragment implements NewsListContract.View 
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         setHasOptionsMenu(true);
         newsList.setLayoutManager(new LinearLayoutManager(getContext()));
-        newsListAdapter = new NewsListAdapter();
+        newsListAdapter = new NewsListAdapter(imageLoader);
         newsList.setAdapter(newsListAdapter);
     }
 

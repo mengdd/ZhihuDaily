@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import com.ddmeng.zhihudaily.R;
 import com.ddmeng.zhihudaily.data.models.DailyNews;
 import com.ddmeng.zhihudaily.data.models.Story;
+import com.ddmeng.zhihudaily.imageloader.ImageLoader;
 import com.ddmeng.zhihudaily.utils.LogUtils;
 
 public class NewsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -17,8 +18,10 @@ public class NewsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     public static final int VIEW_TYPE_TOP_NEWS = 1;
 
     private DailyNews dailyNews;
+    private ImageLoader imageLoader;
 
-    public NewsListAdapter() {
+    public NewsListAdapter(ImageLoader imageLoader) {
+        this.imageLoader = imageLoader;
     }
 
     public void setDailyNews(DailyNews dailyNews) {
@@ -47,7 +50,7 @@ public class NewsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             }
             case VIEW_TYPE_STORY: {
                 View view = layoutInflater.inflate(R.layout.story_view_holder, parent, false);
-                return new StoryViewHolder(view);
+                return new StoryViewHolder(view, imageLoader);
             }
         }
         return null;

@@ -3,8 +3,13 @@ package com.ddmeng.zhihudaily.data.models;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.List;
+
 public class Story {
 
+    @SerializedName("images")
+    @Expose
+    private List<String> images = null;
     @SerializedName("image")
     @Expose
     private String image;
@@ -24,13 +29,20 @@ public class Story {
     @Expose
     private Boolean multipic;
 
-
     public String getImage() {
         return image;
     }
 
     public void setImage(String image) {
         this.image = image;
+    }
+
+    public List<String> getImages() {
+        return images;
+    }
+
+    public void setImages(List<String> images) {
+        this.images = images;
     }
 
     public Integer getType() {

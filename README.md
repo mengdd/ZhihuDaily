@@ -6,6 +6,8 @@ Zhihu Daily Android app, a practice project to use MVP, RxJava, DBFlow, etc.
 - [Dagger 2](https://github.com/google/dagger)
 - [Retrofit](https://github.com/square/retrofit)
 - [RxJava](https://github.com/ReactiveX/RxJava)
+- [retrofit2-rxjava2-adapter](https://github.com/JakeWharton/retrofit2-rxjava2-adapter)
+- [Glide](https://github.com/bumptech/glide)
 - [DBFLow](https://github.com/Raizlabs/DBFlow)
 
 
