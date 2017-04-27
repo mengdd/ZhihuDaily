@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -7,4 +8,14 @@
         android:id="@+id/top_stories_pager"
         android:layout_width="match_parent"
         android:layout_height="@dimen/top_stories_height" />
+
+    <com.rd.PageIndicatorView
+        android:id="@+id/pager_indicator_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center_horizontal"
+        android:layout_marginBottom="@dimen/top_story_indicator_margin_bottom"
+        app:piv_animationType="slide"
+        app:piv_radius="@dimen/pager_indicator_dot_radius"
+        app:piv_viewPager="@+id/top_stories_pager" />
 </FrameLayout>
