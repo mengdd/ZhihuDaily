@@ -17,7 +17,6 @@
         android:id="@+id/news_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/dim_background"
-        android:padding="@dimen/news_list_padding" />
+        android:background="@color/dim_background" />
 
 </LinearLayout>

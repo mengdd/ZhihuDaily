@@ -4,11 +4,15 @@
     <dimen name="story_image_height">80dp</dimen>
     <dimen name="story_text_size">18sp</dimen>
     <dimen name="toolbar_elevation">4dp</dimen>
-    <dimen name="news_list_padding">8dp</dimen>
+    <dimen name="card_margin_horizontal">8dp</dimen>
     <dimen name="card_margin_vertical">4dp</dimen>
     <dimen name="card_elevation">1dp</dimen>
     <dimen name="card_content_padding_horizontal">16dp</dimen>
     <dimen name="card_content_padding_vertical">8dp</dimen>
     <dimen name="card_corner_radius">4dp</dimen>
     <dimen name="card_text_margin_image">8dp</dimen>
+    <dimen name="top_stories_height">200dp</dimen>
+    <dimen name="top_story_text_margin_horizontal">16dp</dimen>
+    <dimen name="top_story_text_margin_bottom">16dp</dimen>
+    <dimen name="top_story_text_size">20sp</dimen>
 </resources>

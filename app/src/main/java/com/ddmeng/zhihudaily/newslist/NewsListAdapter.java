@@ -45,8 +45,8 @@ public class NewsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
         switch (viewType) {
             case VIEW_TYPE_TOP_NEWS: {
-                View view = layoutInflater.inflate(R.layout.top_news_view_holder, parent, false);
-                return new TopNewsViewHolder(view);
+                View view = layoutInflater.inflate(R.layout.top_stories_view_holder, parent, false);
+                return new TopStoriesViewHolder(view, imageLoader);
             }
             case VIEW_TYPE_STORY: {
                 View view = layoutInflater.inflate(R.layout.story_view_holder, parent, false);
@@ -62,13 +62,13 @@ public class NewsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         if (holder instanceof StoryViewHolder) {
             Story story = dailyNews.getStories().get(position - 1);
             ((StoryViewHolder) holder).populate(story);
+        } else if (holder instanceof TopStoriesViewHolder) {
+            ((TopStoriesViewHolder) holder).populate(dailyNews.getTopStories());
         }
     }
 
     @Override
     public int getItemCount() {
-        int count = dailyNews != null ? dailyNews.getStories().size() + 1 : 0;
-        LogUtils.d(TAG, "getItemCount: " + count);
-        return count;
+        return dailyNews != null ? dailyNews.getStories().size() + 1 : 0;
     }
 }

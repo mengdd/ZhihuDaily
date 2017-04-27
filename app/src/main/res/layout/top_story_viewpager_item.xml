@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/pager_item_image"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:contentDescription="@null"
+        android:foreground="@drawable/gradient_mask"
+        android:scaleType="centerCrop" />
+
+    <TextView
+        android:id="@+id/pager_item_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="@dimen/top_story_text_margin_bottom"
+        android:layout_marginEnd="@dimen/top_story_text_margin_horizontal"
+        android:layout_marginLeft="@dimen/top_story_text_margin_horizontal"
+        android:layout_marginRight="@dimen/top_story_text_margin_horizontal"
+        android:layout_marginStart="@dimen/top_story_text_margin_horizontal"
+        android:textColor="@color/white"
+        android:textSize="@dimen/top_story_text_size" />
+
+</FrameLayout>
