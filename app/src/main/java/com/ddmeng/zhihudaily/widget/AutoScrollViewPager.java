@@ -9,12 +9,14 @@ import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 
 import com.ddmeng.zhihudaily.R;
+import com.ddmeng.zhihudaily.utils.LogUtils;
 
 import java.lang.ref.WeakReference;
 
 public class AutoScrollViewPager extends ViewPager {
+    public static final String TAG = "AutoScrollViewPager";
     public static final int MESSAGE_SCROLL = 0;
-    public static final int DEFAULT_SCROLL_INTERVAL_DURATION = 1000;
+    public static final int DEFAULT_SCROLL_INTERVAL_DURATION = 2000;
 
     private Handler scrollHandler;
     private int scrollIntervalDuration = DEFAULT_SCROLL_INTERVAL_DURATION;
@@ -38,6 +40,32 @@ public class AutoScrollViewPager extends ViewPager {
             typedArray.recycle();
         }
         scrollHandler = new ScrollHandler(this);
+        addOnPageChangeListener(new OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                LogUtils.d(TAG, "onPageScrolled: " + position + ", " + positionOffset);
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                LogUtils.d(TAG, "onPageSelected: " + position);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+                LogUtils.d(TAG, "onPageScrollStateChanged: " + state);
+                switch (state) {
+                    case SCROLL_STATE_IDLE: {
+                        startAutoScroll();
+                        break;
+                    }
+                    case SCROLL_STATE_DRAGGING: {
+                        stopAutoScroll();
+                        break;
+                    }
+                }
+            }
+        });
     }
 
     public int getScrollIntervalDuration() {
@@ -89,7 +117,6 @@ public class AutoScrollViewPager extends ViewPager {
                     AutoScrollViewPager autoScrollViewPager = viewPagerWeakReference.get();
                     if (autoScrollViewPager != null) {
                         autoScrollViewPager.scroll();
-                        autoScrollViewPager.sendScrollMessage();
                     }
                     break;
                 }
