@@ -12,6 +12,10 @@ import com.ddmeng.zhihudaily.imageloader.ImageLoader;
 import com.ddmeng.zhihudaily.utils.LogUtils;
 
 public class NewsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    public interface Callback {
+        void onStoryClicked(String id);
+    }
+
     public static final String TAG = "NewsListAdapter";
 
     public static final int VIEW_TYPE_STORY = 0;
@@ -19,9 +23,11 @@ public class NewsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     private DailyNews dailyNews;
     private ImageLoader imageLoader;
+    private Callback callback;
 
-    public NewsListAdapter(ImageLoader imageLoader) {
+    public NewsListAdapter(ImageLoader imageLoader, Callback callback) {
         this.imageLoader = imageLoader;
+        this.callback = callback;
     }
 
     public void setDailyNews(DailyNews dailyNews) {
@@ -50,7 +56,7 @@ public class NewsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             }
             case VIEW_TYPE_STORY: {
                 View view = layoutInflater.inflate(R.layout.story_view_holder, parent, false);
-                return new StoryViewHolder(view, imageLoader);
+                return new StoryViewHolder(view, imageLoader, callback);
             }
         }
         return null;

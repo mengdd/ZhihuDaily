@@ -1,0 +1,60 @@
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.ddmeng.zhihudaily.newsdetail.NewsDetailFragment">
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/detail_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize" />
+    </android.support.design.widget.AppBarLayout>
+
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/top_stories_height">
+
+                <ImageView
+                    android:id="@+id/detail_top_image"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:contentDescription="@null"
+                    android:foreground="@drawable/gradient_mask"
+                    android:scaleType="centerCrop" />
+
+                <TextView
+                    android:id="@+id/detail_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:layout_marginBottom="@dimen/top_story_text_margin_bottom"
+                    android:layout_marginEnd="@dimen/top_story_text_margin_horizontal"
+                    android:layout_marginLeft="@dimen/top_story_text_margin_horizontal"
+                    android:layout_marginRight="@dimen/top_story_text_margin_horizontal"
+                    android:layout_marginStart="@dimen/top_story_text_margin_horizontal"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/top_story_text_size" />
+
+            </FrameLayout>
+
+            <TextView
+                android:id="@+id/detail_body"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+    </android.support.v4.widget.NestedScrollView>
+
+</android.support.design.widget.CoordinatorLayout>

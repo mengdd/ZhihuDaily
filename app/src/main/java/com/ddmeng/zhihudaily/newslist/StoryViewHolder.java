@@ -12,6 +12,7 @@ import com.ddmeng.zhihudaily.utils.LogUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class StoryViewHolder extends RecyclerView.ViewHolder {
     public static final String TAG = "StoryViewHolder";
@@ -21,16 +22,25 @@ public class StoryViewHolder extends RecyclerView.ViewHolder {
     ImageView storyImageView;
 
     private ImageLoader imageLoader;
+    private NewsListAdapter.Callback callback;
+    private String id;
 
-    public StoryViewHolder(View itemView, ImageLoader imageLoader) {
+    public StoryViewHolder(View itemView, ImageLoader imageLoader, NewsListAdapter.Callback callback) {
         super(itemView);
         this.imageLoader = imageLoader;
+        this.callback = callback;
         ButterKnife.bind(this, itemView);
     }
 
     public void populate(Story story) {
         LogUtils.i(TAG, "populate: " + story);
+        id = story.getId();
         titleView.setText(story.getTitle());
         imageLoader.load(story.getImages().get(0), storyImageView);
+    }
+
+    @OnClick(R.id.story_card_view)
+    void onStoryClick() {
+        callback.onStoryClicked(id);
     }
 }

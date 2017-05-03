@@ -18,7 +18,7 @@ public class Story {
     private Integer type;
     @SerializedName("id")
     @Expose
-    private Integer id;
+    private String id;
     @SerializedName("ga_prefix")
     @Expose
     private String gaPrefix;
@@ -53,11 +53,11 @@ public class Story {
         this.type = type;
     }
 
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 

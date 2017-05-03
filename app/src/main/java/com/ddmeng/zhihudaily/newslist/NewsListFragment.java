@@ -12,18 +12,20 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.ddmeng.zhihudaily.MainActivity;
 import com.ddmeng.zhihudaily.R;
 import com.ddmeng.zhihudaily.ZhihuDailyApplication;
 import com.ddmeng.zhihudaily.data.models.DailyNews;
 import com.ddmeng.zhihudaily.imageloader.ImageLoader;
 import com.ddmeng.zhihudaily.imageloader.ImageLoaderFactory;
+import com.ddmeng.zhihudaily.newsdetail.NewsDetailFragment;
 import com.ddmeng.zhihudaily.utils.LogUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
-public class NewsListFragment extends Fragment implements NewsListContract.View {
+public class NewsListFragment extends Fragment implements NewsListContract.View, NewsListAdapter.Callback {
 
     public static final String TAG = "NewsListFragment";
 
@@ -61,7 +63,7 @@ public class NewsListFragment extends Fragment implements NewsListContract.View 
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         setHasOptionsMenu(true);
         newsList.setLayoutManager(new LinearLayoutManager(getContext()));
-        newsListAdapter = new NewsListAdapter(imageLoader);
+        newsListAdapter = new NewsListAdapter(imageLoader, this);
         newsList.setAdapter(newsListAdapter);
     }
 
@@ -76,5 +78,10 @@ public class NewsListFragment extends Fragment implements NewsListContract.View 
     public void onDestroyView() {
         presenter.detachView();
         super.onDestroyView();
+    }
+
+    @Override
+    public void onStoryClicked(String id) {
+        ((MainActivity) getActivity()).replaceFragment(NewsDetailFragment.newInstance(id), NewsDetailFragment.TAG);
     }
 }

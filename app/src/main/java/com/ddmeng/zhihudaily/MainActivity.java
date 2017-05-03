@@ -26,4 +26,13 @@ public class MainActivity extends AppCompatActivity {
                 .add(R.id.main_container, fragment, tag)
                 .commit();
     }
+
+    public void replaceFragment(Fragment fragment, String tag) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager
+                .beginTransaction()
+                .replace(R.id.main_container, fragment, tag)
+                .addToBackStack(tag)
+                .commit();
+    }
 }
