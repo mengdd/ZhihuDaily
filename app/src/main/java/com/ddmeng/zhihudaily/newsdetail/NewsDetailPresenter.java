@@ -13,6 +13,7 @@ import io.reactivex.schedulers.Schedulers;
 public class NewsDetailPresenter implements NewsDetailContract.Presenter {
     private NewsDetailContract.View view;
     private String id;
+    private String shareUrl;
 
     public NewsDetailPresenter(String id) {
         this.id = id;
@@ -47,6 +48,7 @@ public class NewsDetailPresenter implements NewsDetailContract.Presenter {
 
                     @Override
                     public void onNext(@NonNull StoryDetail storyDetail) {
+                        shareUrl = storyDetail.getShareUrl();
                         if (view != null) {
                             view.setNewsDetail(storyDetail);
                         }
@@ -63,5 +65,10 @@ public class NewsDetailPresenter implements NewsDetailContract.Presenter {
                     }
                 });
 
+    }
+
+    @Override
+    public String getShareUrl() {
+        return shareUrl;
     }
 }

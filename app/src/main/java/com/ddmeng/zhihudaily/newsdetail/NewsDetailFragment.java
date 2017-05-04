@@ -1,11 +1,14 @@
 package com.ddmeng.zhihudaily.newsdetail;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -96,8 +99,11 @@ public class NewsDetailFragment extends Fragment implements NewsDetailContract.V
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case android.R.id.home:
+                return onBackPressed();
             case R.id.action_share:
-                break;
+                sendShareAction();
+                return true;
             case R.id.action_star:
                 break;
             case R.id.action_comment:
@@ -106,6 +112,21 @@ public class NewsDetailFragment extends Fragment implements NewsDetailContract.V
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private boolean onBackPressed() {
+        return getFragmentManager().popBackStackImmediate();
+    }
+
+    private void sendShareAction() {
+        String shareUrl = presenter.getShareUrl();
+        if (TextUtils.isEmpty(shareUrl)) {
+            return;
+        }
+        Intent sendIntent = new Intent(Intent.ACTION_SEND);
+        sendIntent.putExtra(Intent.EXTRA_TEXT, shareUrl);
+        sendIntent.setType("text/plain");
+        startActivity(Intent.createChooser(sendIntent, getResources().getText(R.string.action_share)));
     }
 
     @Override
@@ -125,9 +146,13 @@ public class NewsDetailFragment extends Fragment implements NewsDetailContract.V
     }
 
     private void initToolbar() {
+        toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         setHasOptionsMenu(true);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(false);
+        ActionBar supportActionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+        if (supportActionBar != null) {
+            supportActionBar.setDisplayShowTitleEnabled(false);
+        }
     }
 
     private void initWebView() {
