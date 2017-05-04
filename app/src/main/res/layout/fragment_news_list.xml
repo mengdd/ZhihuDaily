@@ -13,10 +13,16 @@
         android:background="@color/colorPrimary"
         app:titleTextColor="@color/white" />
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/news_list"
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_refresh_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/dim_background" />
+        android:layout_height="wrap_content">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/news_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/dim_background" />
+    </android.support.v4.widget.SwipeRefreshLayout>
 
 </LinearLayout>

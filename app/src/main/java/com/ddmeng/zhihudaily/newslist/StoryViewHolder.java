@@ -33,7 +33,7 @@ public class StoryViewHolder extends RecyclerView.ViewHolder {
     }
 
     public void populate(Story story) {
-        LogUtils.i(TAG, "populate: " + story);
+        LogUtils.v(TAG, "populate: " + story);
         id = story.getId();
         titleView.setText(story.getTitle());
         imageLoader.load(story.getImages().get(0), storyImageView);

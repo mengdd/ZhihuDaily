@@ -64,7 +64,7 @@ public class NewsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        LogUtils.d(TAG, "onBindViewHolder: " + position);
+        LogUtils.v(TAG, "onBindViewHolder: " + position);
         if (holder instanceof StoryViewHolder) {
             Story story = dailyNews.getStories().get(position - 1);
             ((StoryViewHolder) holder).populate(story);

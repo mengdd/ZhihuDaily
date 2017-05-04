@@ -31,7 +31,7 @@ public class TopStoriesViewHolder extends RecyclerView.ViewHolder {
     }
 
     public void populate(List<Story> topStories) {
-        LogUtils.i(TAG, "populate: " + topStories.size());
+        LogUtils.v(TAG, "populate: " + topStories.size());
         adapter.setTopStories(topStories);
         adapter.notifyDataSetChanged();
     }

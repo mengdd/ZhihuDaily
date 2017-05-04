@@ -9,11 +9,15 @@ public interface NewsListContract {
         void initViews();
 
         void setDailyNews(DailyNews dailyNews);
+
+        void hideLoading();
     }
 
     interface Presenter extends BasePresenter<NewsListContract.View> {
         void init();
 
         void fetchLatestNews();
+
+        void onRefresh();
     }
 }

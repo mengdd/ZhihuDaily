@@ -43,17 +43,17 @@ public class AutoScrollViewPager extends ViewPager {
         addOnPageChangeListener(new OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                LogUtils.d(TAG, "onPageScrolled: " + position + ", " + positionOffset);
+                LogUtils.v(TAG, "onPageScrolled: " + position + ", " + positionOffset);
             }
 
             @Override
             public void onPageSelected(int position) {
-                LogUtils.d(TAG, "onPageSelected: " + position);
+                LogUtils.v(TAG, "onPageSelected: " + position);
             }
 
             @Override
             public void onPageScrollStateChanged(int state) {
-                LogUtils.d(TAG, "onPageScrollStateChanged: " + state);
+                LogUtils.v(TAG, "onPageScrollStateChanged: " + state);
                 switch (state) {
                     case SCROLL_STATE_IDLE: {
                         startAutoScroll();

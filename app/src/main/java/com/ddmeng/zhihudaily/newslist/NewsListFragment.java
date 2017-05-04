@@ -4,6 +4,7 @@ package com.ddmeng.zhihudaily.newslist;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -33,7 +34,8 @@ public class NewsListFragment extends Fragment implements NewsListContract.View,
     Toolbar toolbar;
     @BindView(R.id.news_list)
     RecyclerView newsList;
-
+    @BindView(R.id.swipe_refresh_layout)
+    SwipeRefreshLayout swipeRefreshLayout;
 
     private NewsListContract.Presenter presenter;
     private NewsListAdapter newsListAdapter;
@@ -65,6 +67,19 @@ public class NewsListFragment extends Fragment implements NewsListContract.View,
         newsList.setLayoutManager(new LinearLayoutManager(getContext()));
         newsListAdapter = new NewsListAdapter(imageLoader, this);
         newsList.setAdapter(newsListAdapter);
+
+        swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                presenter.onRefresh();
+            }
+        });
+    }
+
+    @Override
+    public void hideLoading() {
+        swipeRefreshLayout.setRefreshing(false);
     }
 
     @Override
