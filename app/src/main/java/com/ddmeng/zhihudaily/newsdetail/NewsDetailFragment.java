@@ -12,6 +12,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -20,6 +22,8 @@ import com.ddmeng.zhihudaily.ZhihuDailyApplication;
 import com.ddmeng.zhihudaily.data.models.StoryDetail;
 import com.ddmeng.zhihudaily.imageloader.ImageLoader;
 import com.ddmeng.zhihudaily.imageloader.ImageLoaderFactory;
+import com.ddmeng.zhihudaily.utils.LogUtils;
+import com.ddmeng.zhihudaily.utils.WebUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -29,14 +33,15 @@ public class NewsDetailFragment extends Fragment implements NewsDetailContract.V
     public static final String TAG = "NewsDetailFragment";
 
     private static final String ARG_ID = "arg_id";
+
     @BindView(R.id.detail_toolbar)
     Toolbar toolbar;
     @BindView(R.id.detail_top_image)
     ImageView topImageView;
     @BindView(R.id.detail_title)
     TextView titleView;
-    @BindView(R.id.detail_body)
-    TextView bodyView;
+    @BindView(R.id.web_view)
+    WebView webView;
 
     private NewsDetailContract.Presenter presenter;
     private ImageLoader imageLoader;
@@ -78,10 +83,10 @@ public class NewsDetailFragment extends Fragment implements NewsDetailContract.V
 
     @Override
     public void initViews() {
-        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-        setHasOptionsMenu(true);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(false);
+        initToolbar();
+        initWebView();
     }
+
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -107,12 +112,25 @@ public class NewsDetailFragment extends Fragment implements NewsDetailContract.V
     public void setNewsDetail(StoryDetail storyDetail) {
         imageLoader.load(storyDetail.getImage(), topImageView);
         titleView.setText(storyDetail.getTitle());
-        bodyView.setText(storyDetail.getBody());
+
+        String htmlWithCss = WebUtils.buildHtmlWithCss(storyDetail.getBody(), storyDetail.getCss());
+        LogUtils.v(TAG, "html with Css: " + htmlWithCss);
+        webView.loadData(htmlWithCss, WebUtils.MIME_TYPE, WebUtils.ENCODING);
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         presenter.detachView();
+    }
+
+    private void initToolbar() {
+        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+        setHasOptionsMenu(true);
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(false);
+    }
+
+    private void initWebView() {
+        WebSettings settings = webView.getSettings();
     }
 }
