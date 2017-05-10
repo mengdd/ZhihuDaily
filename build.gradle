@@ -16,11 +16,13 @@ ext {
     supportLibraryVersion = '25.3.1'
     daggerVersion = '2.10'
     butterKnifeVersion = '8.5.1'
+    dbflowVersion = "4.0.0-beta7"
 }
 
 allprojects {
     repositories {
         jcenter()
+        maven { url "https://www.jitpack.io" }
     }
 }
 
