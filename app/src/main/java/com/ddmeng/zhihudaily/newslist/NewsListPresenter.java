@@ -64,6 +64,11 @@ public class NewsListPresenter implements NewsListContract.Presenter {
     }
 
     @Override
+    public void onLoadMore(int page) {
+
+    }
+
+    @Override
     public void attachView(NewsListContract.View view) {
         this.view = view;
     }

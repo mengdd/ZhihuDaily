@@ -19,5 +19,7 @@ public interface NewsListContract {
         void fetchLatestNews();
 
         void onRefresh();
+
+        void onLoadMore(int page);
     }
 }

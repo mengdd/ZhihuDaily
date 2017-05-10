@@ -21,6 +21,7 @@ import com.ddmeng.zhihudaily.imageloader.ImageLoader;
 import com.ddmeng.zhihudaily.imageloader.ImageLoaderFactory;
 import com.ddmeng.zhihudaily.newsdetail.NewsDetailFragment;
 import com.ddmeng.zhihudaily.utils.LogUtils;
+import com.ddmeng.zhihudaily.widget.EndlessRecyclerViewScrollListener;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -40,6 +41,7 @@ public class NewsListFragment extends Fragment implements NewsListContract.View,
     private NewsListContract.Presenter presenter;
     private NewsListAdapter newsListAdapter;
     private ImageLoader imageLoader;
+    private EndlessRecyclerViewScrollListener endlessRecyclerViewScrollListener;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -64,14 +66,24 @@ public class NewsListFragment extends Fragment implements NewsListContract.View,
         toolbar.setTitle(R.string.home);
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         setHasOptionsMenu(true);
-        newsList.setLayoutManager(new LinearLayoutManager(getContext()));
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+        newsList.setLayoutManager(layoutManager);
         newsListAdapter = new NewsListAdapter(imageLoader, this);
         newsList.setAdapter(newsListAdapter);
+        endlessRecyclerViewScrollListener = new EndlessRecyclerViewScrollListener(layoutManager) {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+                LogUtils.d(TAG, "onLoadMore: page: " + page + ", totalItemsCount: " + totalItemsCount);
+                presenter.onLoadMore(page);
+            }
+        };
+        newsList.addOnScrollListener(endlessRecyclerViewScrollListener);
 
         swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                endlessRecyclerViewScrollListener.resetState();
                 presenter.onRefresh();
             }
         });
