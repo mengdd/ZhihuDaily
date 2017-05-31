@@ -1,8 +1,7 @@
 package com.ddmeng.zhihudaily.newslist;
 
-import com.ddmeng.zhihudaily.data.models.DailyNews;
-import com.ddmeng.zhihudaily.data.remote.ServiceGenerator;
-import com.ddmeng.zhihudaily.data.remote.ZhihuService;
+import com.ddmeng.zhihudaily.data.StoriesRepository;
+import com.ddmeng.zhihudaily.data.models.display.DisplayStories;
 import com.ddmeng.zhihudaily.utils.LogUtils;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -15,6 +14,12 @@ public class NewsListPresenter implements NewsListContract.Presenter {
     public static final String TAG = "NewsListPresenter";
     private NewsListContract.View view;
 
+    private StoriesRepository storiesRepository;
+
+    public NewsListPresenter(StoriesRepository storiesRepository) {
+        this.storiesRepository = storiesRepository;
+    }
+
     @Override
     public void init() {
         if (view != null) {
@@ -24,8 +29,7 @@ public class NewsListPresenter implements NewsListContract.Presenter {
 
     @Override
     public void fetchLatestNews() {
-        ZhihuService service = ServiceGenerator.createService(ZhihuService.class);
-        service.getLatestNews()
+        storiesRepository.getNews()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doAfterTerminate(new Action() {
@@ -37,12 +41,12 @@ public class NewsListPresenter implements NewsListContract.Presenter {
                         }
                     }
                 })
-                .subscribe(new DisposableObserver<DailyNews>() {
+                .subscribe(new DisposableObserver<DisplayStories>() {
                     @Override
-                    public void onNext(@NonNull DailyNews dailyNews) {
-                        LogUtils.d(TAG, "onNext: " + dailyNews.getDate());
+                    public void onNext(@NonNull DisplayStories displayStories) {
+                        LogUtils.d(TAG, "onNext: " + displayStories);
                         if (view != null) {
-                            view.setDailyNews(dailyNews);
+                            view.setDisplayStories(displayStories);
                         }
                     }
 

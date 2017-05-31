@@ -6,8 +6,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.ddmeng.zhihudaily.R;
-import com.ddmeng.zhihudaily.data.models.DailyNews;
-import com.ddmeng.zhihudaily.data.models.Story;
+import com.ddmeng.zhihudaily.data.models.db.Story;
+import com.ddmeng.zhihudaily.data.models.display.DisplayStories;
 import com.ddmeng.zhihudaily.imageloader.ImageLoader;
 import com.ddmeng.zhihudaily.utils.LogUtils;
 
@@ -21,7 +21,7 @@ public class NewsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     public static final int VIEW_TYPE_STORY = 0;
     public static final int VIEW_TYPE_TOP_NEWS = 1;
 
-    private DailyNews dailyNews;
+    private DisplayStories displayStories;
     private ImageLoader imageLoader;
     private Callback callback;
 
@@ -30,8 +30,8 @@ public class NewsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         this.callback = callback;
     }
 
-    public void setDailyNews(DailyNews dailyNews) {
-        this.dailyNews = dailyNews;
+    public void setDisplayStories(DisplayStories displayStories) {
+        this.displayStories = displayStories;
     }
 
     @Override
@@ -66,15 +66,15 @@ public class NewsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         LogUtils.v(TAG, "onBindViewHolder: " + position);
         if (holder instanceof StoryViewHolder) {
-            Story story = dailyNews.getStories().get(position - 1);
+            Story story = displayStories.getListStories().get(position - 1);
             ((StoryViewHolder) holder).populate(story);
         } else if (holder instanceof TopStoriesViewHolder) {
-            ((TopStoriesViewHolder) holder).populate(dailyNews.getTopStories());
+            ((TopStoriesViewHolder) holder).populate(displayStories.getTopStories());
         }
     }
 
     @Override
     public int getItemCount() {
-        return dailyNews != null ? dailyNews.getStories().size() + 1 : 0;
+        return displayStories != null ? displayStories.getListStories().size() + 1 : 0;
     }
 }

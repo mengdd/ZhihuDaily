@@ -2,7 +2,7 @@ package com.ddmeng.zhihudaily.newsdetail;
 
 import com.ddmeng.zhihudaily.base.BasePresenter;
 import com.ddmeng.zhihudaily.base.BaseView;
-import com.ddmeng.zhihudaily.data.models.StoryDetail;
+import com.ddmeng.zhihudaily.data.models.response.StoryDetail;
 
 public interface NewsDetailContract {
 

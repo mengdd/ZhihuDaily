@@ -22,7 +22,7 @@ import android.widget.TextView;
 
 import com.ddmeng.zhihudaily.R;
 import com.ddmeng.zhihudaily.ZhihuDailyApplication;
-import com.ddmeng.zhihudaily.data.models.StoryDetail;
+import com.ddmeng.zhihudaily.data.models.response.StoryDetail;
 import com.ddmeng.zhihudaily.imageloader.ImageLoader;
 import com.ddmeng.zhihudaily.imageloader.ImageLoaderFactory;
 import com.ddmeng.zhihudaily.utils.LogUtils;

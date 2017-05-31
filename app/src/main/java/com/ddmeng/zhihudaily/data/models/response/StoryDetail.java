@@ -1,4 +1,4 @@
-package com.ddmeng.zhihudaily.data.models;
+package com.ddmeng.zhihudaily.data.models.response;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -36,7 +36,7 @@ public class StoryDetail {
     private Integer type;
     @SerializedName("id")
     @Expose
-    private Integer id;
+    private String id;
     @SerializedName("css")
     @Expose
     private List<String> css = null;
@@ -122,11 +122,11 @@ public class StoryDetail {
         this.type = type;
     }
 
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 

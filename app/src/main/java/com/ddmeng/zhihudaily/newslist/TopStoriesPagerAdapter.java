@@ -8,7 +8,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ddmeng.zhihudaily.R;
-import com.ddmeng.zhihudaily.data.models.Story;
+import com.ddmeng.zhihudaily.data.models.db.Story;
 import com.ddmeng.zhihudaily.imageloader.ImageLoader;
 
 import java.util.List;
@@ -65,7 +65,7 @@ public class TopStoriesPagerAdapter extends PagerAdapter {
         }
 
         public void populate(Story story, ImageLoader imageLoader) {
-            imageLoader.load(story.getImage(), topImageView);
+            imageLoader.load(story.getListImage(), topImageView);
             topTitleView.setText(story.getTitle());
         }
     }

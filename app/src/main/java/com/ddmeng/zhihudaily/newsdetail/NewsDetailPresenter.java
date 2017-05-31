@@ -1,6 +1,6 @@
 package com.ddmeng.zhihudaily.newsdetail;
 
-import com.ddmeng.zhihudaily.data.models.StoryDetail;
+import com.ddmeng.zhihudaily.data.models.response.StoryDetail;
 import com.ddmeng.zhihudaily.data.remote.ServiceGenerator;
 import com.ddmeng.zhihudaily.data.remote.ZhihuService;
 
@@ -36,6 +36,7 @@ public class NewsDetailPresenter implements NewsDetailContract.Presenter {
 
     @Override
     public void fetchNewsDetail() {
+        //TODO pass it by constructor
         ZhihuService service = ServiceGenerator.createService(ZhihuService.class);
         service.getNewsDetail(id)
                 .subscribeOn(Schedulers.io())

@@ -6,7 +6,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ddmeng.zhihudaily.R;
-import com.ddmeng.zhihudaily.data.models.Story;
+import com.ddmeng.zhihudaily.data.models.db.Story;
 import com.ddmeng.zhihudaily.imageloader.ImageLoader;
 import com.ddmeng.zhihudaily.utils.LogUtils;
 
@@ -36,7 +36,7 @@ public class StoryViewHolder extends RecyclerView.ViewHolder {
         LogUtils.v(TAG, "populate: " + story);
         id = story.getId();
         titleView.setText(story.getTitle());
-        imageLoader.load(story.getImages().get(0), storyImageView);
+        imageLoader.load(story.getListImage(), storyImageView);
     }
 
     @OnClick(R.id.story_card_view)

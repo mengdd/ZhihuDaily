@@ -1,7 +1,7 @@
 package com.ddmeng.zhihudaily.data.remote;
 
-import com.ddmeng.zhihudaily.data.models.DailyNews;
-import com.ddmeng.zhihudaily.data.models.StoryDetail;
+import com.ddmeng.zhihudaily.data.models.response.DailyNews;
+import com.ddmeng.zhihudaily.data.models.response.StoryDetail;
 
 import io.reactivex.Observable;
 import retrofit2.http.GET;
