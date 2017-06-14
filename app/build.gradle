@@ -46,6 +46,7 @@ dependencies {
     compile "com.github.Raizlabs.DBFlow:dbflow-core:${dbflowVersion}"
     compile "com.github.Raizlabs.DBFlow:dbflow:${dbflowVersion}"
     compile "com.github.Raizlabs.DBFlow:dbflow-rx2:${dbflowVersion}"
+    compile 'com.facebook.stetho:stetho:1.5.0'
 
     testCompile 'junit:junit:4.12'
 }

@@ -10,6 +10,7 @@ Zhihu Daily Android app, a practice project to use MVP, RxJava, DBFlow, etc.
 - [Glide](https://github.com/bumptech/glide)
 - [PageIndicatorView](https://github.com/romandanylyk/PageIndicatorView)
 - [DBFLow](https://github.com/Raizlabs/DBFlow)
+- [Stetho](http://facebook.github.io/stetho/)
 
 
 ## API
