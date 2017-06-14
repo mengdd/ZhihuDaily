@@ -14,6 +14,7 @@ import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
+@Singleton
 public class StoriesRemoteDataSource implements StoriesDataSource {
     private DailyNewsConverter converter;
     private ZhihuService zhihuService;
@@ -35,5 +36,9 @@ public class StoriesRemoteDataSource implements StoriesDataSource {
                     }
                 });
 
+    }
+
+    @Override
+    public void saveNews(DisplayStories displayStories) {
     }
 }

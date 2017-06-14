@@ -23,4 +23,12 @@ public class DisplayStories {
     public void setListStories(List<Story> listStories) {
         this.listStories = listStories;
     }
+
+    @Override
+    public String toString() {
+        int topStoriesCount = topStories != null ? topStories.size() : 0;
+        int listStoriesCount = listStories != null ? listStories.size() : 0;
+        return super.toString() + ", top stories count = " + topStoriesCount +
+                ", list stories count = " + listStoriesCount;
+    }
 }

@@ -13,12 +13,14 @@ public class StoryConverter {
     public Story convertTopStory(com.ddmeng.zhihudaily.data.models.response.Story responseStory, String date) {
         Story story = convert(responseStory, date);
         story.setListImage(responseStory.getImage());
+        story.setTopStory(true);
         return story;
     }
 
     public Story convertListStory(com.ddmeng.zhihudaily.data.models.response.Story responseStory, String date) {
         Story story = convert(responseStory, date);
         story.setListImage(responseStory.getImages().get(0));
+        story.setTopStory(false);
         return story;
     }
 

@@ -23,6 +23,8 @@ public class Story extends BaseModel {
     private boolean multiPic;
     @ForeignKey(stubbedRelationship = true)
     private StoryDetail storyDetail;
+    @Column
+    private boolean isTopStory;
 
     public String getId() {
         return id;
@@ -78,5 +80,13 @@ public class Story extends BaseModel {
 
     public void setStoryDetail(StoryDetail storyDetail) {
         this.storyDetail = storyDetail;
+    }
+
+    public boolean isTopStory() {
+        return isTopStory;
+    }
+
+    public void setTopStory(boolean topStory) {
+        isTopStory = topStory;
     }
 }

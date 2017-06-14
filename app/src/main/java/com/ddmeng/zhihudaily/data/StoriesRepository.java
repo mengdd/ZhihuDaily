@@ -44,13 +44,20 @@ public class StoriesRepository implements StoriesDataSource {
                     .filter(new Predicate<DisplayStories>() {
                         @Override
                         public boolean test(@NonNull DisplayStories displayStories) throws Exception {
-                            // TODO revise this after local implemented
-                            return displayStories.getListStories() != null;
+                            return displayStories.getListStories() != null &&
+                                    !displayStories.getListStories().isEmpty();
                         }
                     })
                     .firstElement()
                     .toObservable();
         }
+    }
+
+    @Override
+    public void saveNews(DisplayStories displayStories) {
+        remoteDataSource.saveNews(displayStories);
+        localDataSource.saveNews(displayStories);
+        memoryCachedDisplayStories = displayStories;
     }
 
     public void refreshNews() {
@@ -61,7 +68,8 @@ public class StoriesRepository implements StoriesDataSource {
         return remoteDataSource.getNews().map(new Function<DisplayStories, DisplayStories>() {
             @Override
             public DisplayStories apply(@NonNull DisplayStories displayStories) throws Exception {
-                // TODO save the news into local
+                localDataSource.saveNews(displayStories);
+                memoryCachedDisplayStories = displayStories;
                 return displayStories;
             }
         }).doOnComplete(new Action() {
@@ -73,8 +81,13 @@ public class StoriesRepository implements StoriesDataSource {
     }
 
     private Observable<DisplayStories> getAndCacheLocalNews() {
-        // TODO save the news to memory cache
-        return localDataSource.getNews();
+        return localDataSource.getNews().map(new Function<DisplayStories, DisplayStories>() {
+            @Override
+            public DisplayStories apply(@NonNull DisplayStories displayStories) throws Exception {
+                memoryCachedDisplayStories = displayStories;
+                return displayStories;
+            }
+        });
     }
 
 }
