@@ -4,6 +4,7 @@ import com.ddmeng.zhihudaily.data.StoriesDataSource;
 import com.ddmeng.zhihudaily.data.models.display.DisplayStories;
 import com.ddmeng.zhihudaily.data.models.response.DailyNews;
 import com.ddmeng.zhihudaily.data.models.transform.DailyNewsConverter;
+import com.ddmeng.zhihudaily.utils.DateUtils;
 import com.ddmeng.zhihudaily.utils.LogUtils;
 
 import javax.inject.Inject;
@@ -38,7 +39,9 @@ public class StoriesRemoteDataSource implements StoriesDataSource {
 
     @Override
     public Observable<DisplayStories> getNewsForDate(final String date) {
-        return zhihuService.getBeforeNews(date)
+        String nextDate = DateUtils.getDateStringPlusDays(date, 1);
+        LogUtils.i(TAG, "getNewsForDate: " + date + ", actual request date: " + nextDate);
+        return zhihuService.getNewsBefore(nextDate)
                 .subscribeOn(Schedulers.io())
                 .compose(convertToDisplayStories());
     }

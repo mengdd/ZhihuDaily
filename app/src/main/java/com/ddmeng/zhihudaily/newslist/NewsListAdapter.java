@@ -34,6 +34,10 @@ public class NewsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         this.displayStories = displayStories;
     }
 
+    public void appendDisplayStories(DisplayStories displayStories) {
+        this.displayStories.getListStories().addAll(displayStories.getListStories());
+    }
+
     @Override
     public int getItemViewType(int position) {
         switch (position) {

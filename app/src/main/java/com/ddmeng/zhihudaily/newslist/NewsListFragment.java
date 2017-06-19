@@ -111,6 +111,12 @@ public class NewsListFragment extends Fragment implements NewsListContract.View,
     }
 
     @Override
+    public void appendDisplayStories(DisplayStories displayStories) {
+        newsListAdapter.appendDisplayStories(displayStories);
+        newsListAdapter.notifyDataSetChanged();
+    }
+
+    @Override
     public void onDestroyView() {
         presenter.detachView();
         super.onDestroyView();

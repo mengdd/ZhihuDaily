@@ -34,6 +34,7 @@ public class StoriesLocalDataSource implements StoriesDataSource {
 
     @Override
     public Observable<DisplayStories> getNewsForDate(final String date) {
+        LogUtils.i(TAG, "getNewsForDate: " + date);
         return Observable.fromCallable(new Callable<DisplayStories>() {
             @Override
             public DisplayStories call() throws Exception {
@@ -55,7 +56,7 @@ public class StoriesLocalDataSource implements StoriesDataSource {
 
     @Override
     public void saveNews(DisplayStories displayStories) {
-        LogUtils.i(TAG, "save: " + displayStories);
+        LogUtils.i(TAG, "save to local: " + displayStories);
         List<Story> listStories = displayStories.getListStories();
         List<Story> topStories = displayStories.getTopStories();
         FastStoreModelTransaction

@@ -1,6 +1,8 @@
 package com.ddmeng.zhihudaily.utils;
 
 import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
 public class DateUtils {
 
@@ -13,9 +15,17 @@ public class DateUtils {
         return dateString;
     }
 
-    public static String getDateString(int daysBefore) {
-        String dateString = DateTime.now().minusDays(daysBefore).toString(DATE_FORMAT);
-        LogUtils.d(TAG, "get: " + daysBefore + " days before current date: " + dateString);
+    public static String getDateStringMinusDays(int days) {
+        String dateString = DateTime.now().minusDays(days).toString(DATE_FORMAT);
+        LogUtils.d(TAG, "get: " + days + " days before current date: " + dateString);
+        return dateString;
+    }
+
+    public static String getDateStringPlusDays(String date, int days) {
+        DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern(DATE_FORMAT);
+        DateTime dateTime = dateTimeFormatter.parseDateTime(date);
+        String dateString = dateTime.plusDays(days).toString(DATE_FORMAT);
+        LogUtils.d(TAG, "get: " + days + " days after: " + date + " = " + dateString);
         return dateString;
     }
 }

@@ -10,6 +10,8 @@ public interface NewsListContract {
 
         void setDisplayStories(DisplayStories displayStories);
 
+        void appendDisplayStories(DisplayStories displayStories);
+
         void hideLoading();
     }
 

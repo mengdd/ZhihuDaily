@@ -13,7 +13,7 @@ public interface ZhihuService {
     Observable<DailyNews> getLatestNews();
 
     @GET("news/before/{date}")
-    Observable<DailyNews> getBeforeNews(@Path("date") String date);
+    Observable<DailyNews> getNewsBefore(@Path("date") String date);
 
     @GET("news/{id}")
     Observable<StoryDetail> getNewsDetail(@Path("id") String id);

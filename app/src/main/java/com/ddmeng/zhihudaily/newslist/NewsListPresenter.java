@@ -2,6 +2,7 @@ package com.ddmeng.zhihudaily.newslist;
 
 import com.ddmeng.zhihudaily.data.StoriesRepository;
 import com.ddmeng.zhihudaily.data.models.display.DisplayStories;
+import com.ddmeng.zhihudaily.utils.DateUtils;
 import com.ddmeng.zhihudaily.utils.LogUtils;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -69,7 +70,29 @@ public class NewsListPresenter implements NewsListContract.Presenter {
 
     @Override
     public void onLoadMore(int page) {
+        String dateBefore = DateUtils.getDateStringMinusDays(page);
+        storiesRepository.getNewsForDate(dateBefore)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new DisposableObserver<DisplayStories>() {
+                    @Override
+                    public void onNext(@NonNull DisplayStories displayStories) {
+                        LogUtils.d(TAG, "onNext for load more: " + displayStories);
+                        if (view != null) {
+                            view.appendDisplayStories(displayStories);
+                        }
+                    }
 
+                    @Override
+                    public void onError(@NonNull Throwable e) {
+                        LogUtils.e(TAG, "onError", e);
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        LogUtils.d(TAG, "onComplete");
+                    }
+                });
     }
 
     @Override
