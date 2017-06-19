@@ -65,6 +65,7 @@ public class NewsListPresenter implements NewsListContract.Presenter {
 
     @Override
     public void onRefresh() {
+        storiesRepository.refreshNews();
         fetchLatestNews();
     }
 
