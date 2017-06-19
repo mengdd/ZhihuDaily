@@ -7,6 +7,7 @@ import com.ddmeng.zhihudaily.utils.LogUtils;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
+import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.functions.Action;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
@@ -16,6 +17,7 @@ public class NewsListPresenter implements NewsListContract.Presenter {
     private NewsListContract.View view;
 
     private StoriesRepository storiesRepository;
+    private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
     public NewsListPresenter(StoriesRepository storiesRepository) {
         this.storiesRepository = storiesRepository;
@@ -30,7 +32,7 @@ public class NewsListPresenter implements NewsListContract.Presenter {
 
     @Override
     public void fetchLatestNews() {
-        storiesRepository.getLatestNews()
+        DisposableObserver<DisplayStories> disposableObserver = storiesRepository.getLatestNews()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doAfterTerminate(new Action() {
@@ -42,7 +44,7 @@ public class NewsListPresenter implements NewsListContract.Presenter {
                         }
                     }
                 })
-                .subscribe(new DisposableObserver<DisplayStories>() {
+                .subscribeWith(new DisposableObserver<DisplayStories>() {
                     @Override
                     public void onNext(@NonNull DisplayStories displayStories) {
                         LogUtils.d(TAG, "onNext: " + displayStories);
@@ -61,6 +63,7 @@ public class NewsListPresenter implements NewsListContract.Presenter {
                         LogUtils.d(TAG, "onComplete");
                     }
                 });
+        compositeDisposable.add(disposableObserver);
     }
 
     @Override
@@ -72,10 +75,10 @@ public class NewsListPresenter implements NewsListContract.Presenter {
     @Override
     public void onLoadMore(int page) {
         String dateBefore = DateUtils.getDateStringMinusDays(page);
-        storiesRepository.getNewsForDate(dateBefore)
+        DisposableObserver<DisplayStories> disposableObserver = storiesRepository.getNewsForDate(dateBefore)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new DisposableObserver<DisplayStories>() {
+                .subscribeWith(new DisposableObserver<DisplayStories>() {
                     @Override
                     public void onNext(@NonNull DisplayStories displayStories) {
                         LogUtils.d(TAG, "onNext for load more: " + displayStories);
@@ -94,6 +97,7 @@ public class NewsListPresenter implements NewsListContract.Presenter {
                         LogUtils.d(TAG, "onComplete");
                     }
                 });
+        compositeDisposable.add(disposableObserver);
     }
 
     @Override
@@ -104,5 +108,10 @@ public class NewsListPresenter implements NewsListContract.Presenter {
     @Override
     public void detachView() {
         this.view = null;
+    }
+
+    @Override
+    public void dispose() {
+        compositeDisposable.clear();
     }
 }

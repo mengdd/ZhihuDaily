@@ -23,5 +23,7 @@ public interface NewsListContract {
         void onRefresh();
 
         void onLoadMore(int page);
+
+        void dispose();
     }
 }

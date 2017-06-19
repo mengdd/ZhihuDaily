@@ -118,6 +118,7 @@ public class NewsListFragment extends Fragment implements NewsListContract.View,
 
     @Override
     public void onDestroyView() {
+        presenter.dispose();
         presenter.detachView();
         super.onDestroyView();
     }
