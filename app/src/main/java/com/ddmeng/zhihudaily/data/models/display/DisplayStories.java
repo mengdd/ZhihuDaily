@@ -5,8 +5,17 @@ import com.ddmeng.zhihudaily.data.models.db.Story;
 import java.util.List;
 
 public class DisplayStories {
+    private String date;
     private List<Story> topStories;
     private List<Story> listStories;
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
 
     public List<Story> getTopStories() {
         return topStories;
@@ -28,7 +37,7 @@ public class DisplayStories {
     public String toString() {
         int topStoriesCount = topStories != null ? topStories.size() : 0;
         int listStoriesCount = listStories != null ? listStories.size() : 0;
-        return super.toString() + ", top stories count = " + topStoriesCount +
+        return super.toString() + "date: " + date + ", top stories count = " + topStoriesCount +
                 ", list stories count = " + listStoriesCount;
     }
 }

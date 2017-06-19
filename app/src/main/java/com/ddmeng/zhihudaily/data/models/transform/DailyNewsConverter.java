@@ -19,6 +19,7 @@ public class DailyNewsConverter {
 
     public DisplayStories getNews(DailyNews dailyNews) {
         DisplayStories displayStories = new DisplayStories();
+        displayStories.setDate(dailyNews.getDate());
         displayStories.setTopStories(getTopStories(dailyNews));
         displayStories.setListStories(getListStories(dailyNews));
         return displayStories;
@@ -27,9 +28,11 @@ public class DailyNewsConverter {
     private List<Story> getTopStories(DailyNews dailyNews) {
         List<com.ddmeng.zhihudaily.data.models.response.Story> responseTopStories = dailyNews.getTopStories();
         List<Story> topStories = new ArrayList<>();
-        for (com.ddmeng.zhihudaily.data.models.response.Story responseStory : responseTopStories) {
-            Story story = storyConverter.convertTopStory(responseStory, dailyNews.getDate());
-            topStories.add(story);
+        if (responseTopStories != null) {
+            for (com.ddmeng.zhihudaily.data.models.response.Story responseStory : responseTopStories) {
+                Story story = storyConverter.convertTopStory(responseStory, dailyNews.getDate());
+                topStories.add(story);
+            }
         }
         return topStories;
     }

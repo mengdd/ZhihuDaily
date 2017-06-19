@@ -11,6 +11,7 @@ import javax.inject.Singleton;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
+import io.reactivex.ObservableTransformer;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
@@ -31,14 +32,30 @@ public class StoriesRemoteDataSource implements StoriesDataSource {
     public Observable<DisplayStories> getLatestNews() {
         return zhihuService.getLatestNews()
                 .subscribeOn(Schedulers.io())
-                .flatMap(new Function<DailyNews, ObservableSource<DisplayStories>>() {
+                .compose(convertToDisplayStories());
+
+    }
+
+    @Override
+    public Observable<DisplayStories> getNewsForDate(final String date) {
+        return zhihuService.getBeforeNews(date)
+                .subscribeOn(Schedulers.io())
+                .compose(convertToDisplayStories());
+    }
+
+    private ObservableTransformer<DailyNews, DisplayStories> convertToDisplayStories() {
+        return new ObservableTransformer<DailyNews, DisplayStories>() {
+            @Override
+            public ObservableSource<DisplayStories> apply(@NonNull Observable<DailyNews> upstream) {
+                return upstream.flatMap(new Function<DailyNews, ObservableSource<DisplayStories>>() {
                     @Override
                     public ObservableSource<DisplayStories> apply(@NonNull DailyNews dailyNews) throws Exception {
-                        LogUtils.i(TAG, "get latest news from remote");
+                        LogUtils.i(TAG, "get news from remote: date: " + dailyNews.getDate());
                         return Observable.just(converter.getNews(dailyNews));
                     }
                 });
-
+            }
+        };
     }
 
     @Override

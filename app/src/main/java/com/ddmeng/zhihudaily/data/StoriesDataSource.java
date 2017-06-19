@@ -8,5 +8,7 @@ public interface StoriesDataSource {
 
     Observable<DisplayStories> getLatestNews();
 
+    Observable<DisplayStories> getNewsForDate(String date);
+
     void saveNews(DisplayStories displayStories);
 }

@@ -28,20 +28,26 @@ public class StoriesLocalDataSource implements StoriesDataSource {
 
     @Override
     public Observable<DisplayStories> getLatestNews() {
+        String currentDataString = DateUtils.getCurrentDataString();
+        return getNewsForDate(currentDataString);
+    }
+
+    @Override
+    public Observable<DisplayStories> getNewsForDate(final String date) {
         return Observable.fromCallable(new Callable<DisplayStories>() {
             @Override
             public DisplayStories call() throws Exception {
                 DisplayStories displayStories = new DisplayStories();
-                String currentDataString = DateUtils.getCurrentDataString();
+                displayStories.setDate(date);
                 List<Story> topStories = SQLite.select().from(Story.class)
-                        .where(Story_Table.date.eq(currentDataString), Story_Table.isTopStory.eq(true))
+                        .where(Story_Table.date.eq(date), Story_Table.isTopStory.eq(true))
                         .queryList();
                 List<Story> listStories = SQLite.select().from(Story.class)
-                        .where(Story_Table.date.eq(currentDataString), Story_Table.isTopStory.eq(false))
+                        .where(Story_Table.date.eq(date), Story_Table.isTopStory.eq(false))
                         .queryList();
                 displayStories.setTopStories(topStories);
                 displayStories.setListStories(listStories);
-                LogUtils.i(TAG, "query from local: " + displayStories);
+                LogUtils.i(TAG, "query from local for date: " + date + ", get: " + displayStories);
                 return displayStories;
             }
         });
