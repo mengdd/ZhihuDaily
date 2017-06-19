@@ -3,6 +3,7 @@ package com.ddmeng.zhihudaily.data;
 import android.support.annotation.Nullable;
 
 import com.ddmeng.zhihudaily.data.models.display.DisplayStories;
+import com.ddmeng.zhihudaily.utils.LogUtils;
 
 import io.reactivex.Observable;
 import io.reactivex.annotations.NonNull;
@@ -12,6 +13,8 @@ import io.reactivex.functions.Predicate;
 
 public class StoriesRepository implements StoriesDataSource {
 
+
+    private static final String TAG = "StoriesRepository";
     private StoriesDataSource remoteDataSource;
     private StoriesDataSource localDataSource;
 
@@ -27,7 +30,7 @@ public class StoriesRepository implements StoriesDataSource {
     }
 
     @Override
-    public Observable<DisplayStories> getNews() {
+    public Observable<DisplayStories> getLatestNews() {
         // Respond immediately with cache if available and not dirty
         if (memoryCachedDisplayStories != null && !isMemoryCacheDirty) {
             return Observable.just(memoryCachedDisplayStories);
@@ -65,9 +68,10 @@ public class StoriesRepository implements StoriesDataSource {
     }
 
     private Observable<DisplayStories> getAndSaveRemoteNews() {
-        return remoteDataSource.getNews().map(new Function<DisplayStories, DisplayStories>() {
+        return remoteDataSource.getLatestNews().map(new Function<DisplayStories, DisplayStories>() {
             @Override
             public DisplayStories apply(@NonNull DisplayStories displayStories) throws Exception {
+                LogUtils.d(TAG, "save remote news");
                 localDataSource.saveNews(displayStories);
                 memoryCachedDisplayStories = displayStories;
                 return displayStories;
@@ -81,9 +85,10 @@ public class StoriesRepository implements StoriesDataSource {
     }
 
     private Observable<DisplayStories> getAndCacheLocalNews() {
-        return localDataSource.getNews().map(new Function<DisplayStories, DisplayStories>() {
+        return localDataSource.getLatestNews().map(new Function<DisplayStories, DisplayStories>() {
             @Override
             public DisplayStories apply(@NonNull DisplayStories displayStories) throws Exception {
+                LogUtils.d(TAG, "cache local news: " + displayStories);
                 memoryCachedDisplayStories = displayStories;
                 return displayStories;
             }

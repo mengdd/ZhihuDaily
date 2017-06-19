@@ -4,6 +4,7 @@ import com.ddmeng.zhihudaily.data.StoriesDataSource;
 import com.ddmeng.zhihudaily.data.models.display.DisplayStories;
 import com.ddmeng.zhihudaily.data.models.response.DailyNews;
 import com.ddmeng.zhihudaily.data.models.transform.DailyNewsConverter;
+import com.ddmeng.zhihudaily.utils.LogUtils;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -16,6 +17,7 @@ import io.reactivex.schedulers.Schedulers;
 
 @Singleton
 public class StoriesRemoteDataSource implements StoriesDataSource {
+    public static final String TAG = "RemoteDataSource";
     private DailyNewsConverter converter;
     private ZhihuService zhihuService;
 
@@ -26,12 +28,13 @@ public class StoriesRemoteDataSource implements StoriesDataSource {
     }
 
     @Override
-    public Observable<DisplayStories> getNews() {
+    public Observable<DisplayStories> getLatestNews() {
         return zhihuService.getLatestNews()
                 .subscribeOn(Schedulers.io())
                 .flatMap(new Function<DailyNews, ObservableSource<DisplayStories>>() {
                     @Override
                     public ObservableSource<DisplayStories> apply(@NonNull DailyNews dailyNews) throws Exception {
+                        LogUtils.i(TAG, "get latest news from remote");
                         return Observable.just(converter.getNews(dailyNews));
                     }
                 });

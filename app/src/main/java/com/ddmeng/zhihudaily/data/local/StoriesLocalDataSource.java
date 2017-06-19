@@ -4,6 +4,7 @@ import com.ddmeng.zhihudaily.data.StoriesDataSource;
 import com.ddmeng.zhihudaily.data.models.db.Story;
 import com.ddmeng.zhihudaily.data.models.db.Story_Table;
 import com.ddmeng.zhihudaily.data.models.display.DisplayStories;
+import com.ddmeng.zhihudaily.utils.DateUtils;
 import com.ddmeng.zhihudaily.utils.LogUtils;
 import com.raizlabs.android.dbflow.config.FlowManager;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
@@ -26,16 +27,17 @@ public class StoriesLocalDataSource implements StoriesDataSource {
     }
 
     @Override
-    public Observable<DisplayStories> getNews() {
+    public Observable<DisplayStories> getLatestNews() {
         return Observable.fromCallable(new Callable<DisplayStories>() {
             @Override
             public DisplayStories call() throws Exception {
                 DisplayStories displayStories = new DisplayStories();
+                String currentDataString = DateUtils.getCurrentDataString();
                 List<Story> topStories = SQLite.select().from(Story.class)
-                        .where(Story_Table.isTopStory.eq(true))
+                        .where(Story_Table.date.eq(currentDataString), Story_Table.isTopStory.eq(true))
                         .queryList();
                 List<Story> listStories = SQLite.select().from(Story.class)
-                        .where(Story_Table.isTopStory.eq(false))
+                        .where(Story_Table.date.eq(currentDataString), Story_Table.isTopStory.eq(false))
                         .queryList();
                 displayStories.setTopStories(topStories);
                 displayStories.setListStories(listStories);

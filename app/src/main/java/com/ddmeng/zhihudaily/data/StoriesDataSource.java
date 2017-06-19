@@ -6,7 +6,7 @@ import io.reactivex.Observable;
 
 public interface StoriesDataSource {
 
-    Observable<DisplayStories> getNews();
+    Observable<DisplayStories> getLatestNews();
 
     void saveNews(DisplayStories displayStories);
 }

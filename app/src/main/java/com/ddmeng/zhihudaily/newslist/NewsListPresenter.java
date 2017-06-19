@@ -29,7 +29,7 @@ public class NewsListPresenter implements NewsListContract.Presenter {
 
     @Override
     public void fetchLatestNews() {
-        storiesRepository.getNews()
+        storiesRepository.getLatestNews()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doAfterTerminate(new Action() {
