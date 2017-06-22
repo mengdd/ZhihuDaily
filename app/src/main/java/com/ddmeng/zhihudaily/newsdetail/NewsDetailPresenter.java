@@ -1,8 +1,8 @@
 package com.ddmeng.zhihudaily.newsdetail;
 
-import com.ddmeng.zhihudaily.data.models.response.StoryDetail;
-import com.ddmeng.zhihudaily.data.remote.ServiceGenerator;
-import com.ddmeng.zhihudaily.data.remote.ZhihuService;
+import com.ddmeng.zhihudaily.data.StoriesRepository;
+import com.ddmeng.zhihudaily.data.models.db.StoryDetail;
+import com.ddmeng.zhihudaily.utils.LogUtils;
 
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -11,12 +11,15 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
 public class NewsDetailPresenter implements NewsDetailContract.Presenter {
+    private static final String TAG = "NewsDetailPresenter";
     private NewsDetailContract.View view;
+    private StoriesRepository storiesRepository;
     private String id;
     private String shareUrl;
 
-    public NewsDetailPresenter(String id) {
+    public NewsDetailPresenter(String id, StoriesRepository storiesRepository) {
         this.id = id;
+        this.storiesRepository = storiesRepository;
     }
 
     @Override
@@ -36,9 +39,7 @@ public class NewsDetailPresenter implements NewsDetailContract.Presenter {
 
     @Override
     public void fetchNewsDetail() {
-        //TODO pass it by constructor
-        ZhihuService service = ServiceGenerator.createService(ZhihuService.class);
-        service.getNewsDetail(id)
+        storiesRepository.getNewsDetail(id)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<StoryDetail>() {
@@ -49,6 +50,7 @@ public class NewsDetailPresenter implements NewsDetailContract.Presenter {
 
                     @Override
                     public void onNext(@NonNull StoryDetail storyDetail) {
+                        LogUtils.d(TAG, "onNext: " + storyDetail.getId());
                         shareUrl = storyDetail.getShareUrl();
                         if (view != null) {
                             view.setNewsDetail(storyDetail);
@@ -57,12 +59,13 @@ public class NewsDetailPresenter implements NewsDetailContract.Presenter {
 
                     @Override
                     public void onError(@NonNull Throwable e) {
+                        LogUtils.e(TAG, "onError: " + e);
 
                     }
 
                     @Override
                     public void onComplete() {
-
+                        LogUtils.d(TAG, "onComplete");
                     }
                 });
 

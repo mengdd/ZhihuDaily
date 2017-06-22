@@ -3,6 +3,7 @@ package com.ddmeng.zhihudaily.data;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
+import com.ddmeng.zhihudaily.data.models.db.StoryDetail;
 import com.ddmeng.zhihudaily.data.models.display.DisplayStories;
 import com.ddmeng.zhihudaily.utils.DateUtils;
 import com.ddmeng.zhihudaily.utils.LogUtils;
@@ -70,16 +71,37 @@ public class StoriesRepository implements StoriesDataSource {
         }
     }
 
-    @Override
-    public void saveNews(DisplayStories displayStories) {
-        remoteDataSource.saveNews(displayStories);
-        localDataSource.saveNews(displayStories);
-        saveToMemoryCache(displayStories);
-
-    }
-
     public void refreshNews() {
         isMemoryCacheDirty = true;
+    }
+
+    @Override
+    public Observable<StoryDetail> getNewsDetail(String id) {
+        // no memory cache for news detail
+
+        Observable<StoryDetail> remoteDetail = remoteDataSource.getNewsDetail(id).compose(saveDetailToLocal());
+        Observable<StoryDetail> localDetail = localDataSource.getNewsDetail(id);
+
+        return Observable.concat(localDetail, remoteDetail)
+                .filter(new Predicate<StoryDetail>() {
+                    @Override
+                    public boolean test(@NonNull StoryDetail storyDetail) throws Exception {
+                        return storyDetail != null;
+                    }
+                })
+                .firstElement()
+                .toObservable();
+    }
+
+    @Override
+    public void saveNews(DisplayStories displayStories) {
+        localDataSource.saveNews(displayStories);
+        saveToMemoryCache(displayStories);
+    }
+
+    @Override
+    public void saveDetail(StoryDetail detail) {
+        localDataSource.saveDetail(detail);
     }
 
     private Observable<DisplayStories> getAndSaveRemoteNews(String date) {
@@ -91,7 +113,7 @@ public class StoriesRepository implements StoriesDataSource {
         }
 
         return getNewsObservable
-                .compose(saveToLocal())
+                .compose(saveNewsToLocal())
                 .doOnComplete(new Action() {
                     @Override
                     public void run() throws Exception {
@@ -111,7 +133,7 @@ public class StoriesRepository implements StoriesDataSource {
                 .compose(saveToMemory());
     }
 
-    private ObservableTransformer<DisplayStories, DisplayStories> saveToLocal() {
+    private ObservableTransformer<DisplayStories, DisplayStories> saveNewsToLocal() {
         return new ObservableTransformer<DisplayStories, DisplayStories>() {
             @Override
             public ObservableSource<DisplayStories> apply(@NonNull Observable<DisplayStories> upstream) {
@@ -122,6 +144,22 @@ public class StoriesRepository implements StoriesDataSource {
                         localDataSource.saveNews(displayStories);
                         saveToMemoryCache(displayStories);
                         return displayStories;
+                    }
+                });
+            }
+        };
+    }
+
+    private ObservableTransformer<StoryDetail, StoryDetail> saveDetailToLocal() {
+        return new ObservableTransformer<StoryDetail, StoryDetail>() {
+            @Override
+            public ObservableSource<StoryDetail> apply(@NonNull Observable<StoryDetail> upstream) {
+                return upstream.map(new Function<StoryDetail, StoryDetail>() {
+                    @Override
+                    public StoryDetail apply(@NonNull StoryDetail storyDetail) throws Exception {
+                        LogUtils.d(TAG, "save remote detail to local");
+                        localDataSource.saveDetail(storyDetail);
+                        return storyDetail;
                     }
                 });
             }

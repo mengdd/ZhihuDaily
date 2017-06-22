@@ -1,9 +1,11 @@
 package com.ddmeng.zhihudaily.data.remote;
 
 import com.ddmeng.zhihudaily.data.StoriesDataSource;
+import com.ddmeng.zhihudaily.data.models.db.StoryDetail;
 import com.ddmeng.zhihudaily.data.models.display.DisplayStories;
 import com.ddmeng.zhihudaily.data.models.response.DailyNews;
 import com.ddmeng.zhihudaily.data.models.transform.DailyNewsConverter;
+import com.ddmeng.zhihudaily.data.models.transform.StoryDetailConverter;
 import com.ddmeng.zhihudaily.utils.DateUtils;
 import com.ddmeng.zhihudaily.utils.LogUtils;
 
@@ -20,13 +22,16 @@ import io.reactivex.schedulers.Schedulers;
 @Singleton
 public class StoriesRemoteDataSource implements StoriesDataSource {
     public static final String TAG = "RemoteDataSource";
-    private DailyNewsConverter converter;
+    private DailyNewsConverter newsConverter;
+    private StoryDetailConverter detailConverter;
     private ZhihuService zhihuService;
 
     @Inject
-    public StoriesRemoteDataSource(DailyNewsConverter converter, ZhihuService zhihuService) {
-        this.converter = converter;
+    public StoriesRemoteDataSource(ZhihuService zhihuService, DailyNewsConverter newsConverter,
+                                   StoryDetailConverter storyDetailConverter) {
         this.zhihuService = zhihuService;
+        this.newsConverter = newsConverter;
+        this.detailConverter = storyDetailConverter;
     }
 
     @Override
@@ -46,22 +51,49 @@ public class StoriesRemoteDataSource implements StoriesDataSource {
                 .compose(convertToDisplayStories());
     }
 
+    @Override
+    public Observable<StoryDetail> getNewsDetail(String id) {
+        return zhihuService.getNewsDetail(id)
+                .subscribeOn(Schedulers.io())
+                .compose(convertToStoryDetail());
+    }
+
+    @Override
+    public void saveNews(DisplayStories displayStories) {
+    }
+
+    @Override
+    public void saveDetail(StoryDetail detail) {
+    }
+
     private ObservableTransformer<DailyNews, DisplayStories> convertToDisplayStories() {
         return new ObservableTransformer<DailyNews, DisplayStories>() {
             @Override
             public ObservableSource<DisplayStories> apply(@NonNull Observable<DailyNews> upstream) {
-                return upstream.flatMap(new Function<DailyNews, ObservableSource<DisplayStories>>() {
+                return upstream.map(new Function<DailyNews, DisplayStories>() {
                     @Override
-                    public ObservableSource<DisplayStories> apply(@NonNull DailyNews dailyNews) throws Exception {
+                    public DisplayStories apply(@NonNull DailyNews dailyNews) throws Exception {
                         LogUtils.i(TAG, "get news from remote: date: " + dailyNews.getDate());
-                        return Observable.just(converter.getNews(dailyNews));
+                        return newsConverter.getNews(dailyNews);
                     }
                 });
             }
         };
     }
 
-    @Override
-    public void saveNews(DisplayStories displayStories) {
+
+    private ObservableTransformer<com.ddmeng.zhihudaily.data.models.response.StoryDetail, StoryDetail> convertToStoryDetail() {
+        return new ObservableTransformer<com.ddmeng.zhihudaily.data.models.response.StoryDetail, StoryDetail>() {
+            @Override
+            public ObservableSource<StoryDetail> apply(@NonNull Observable<com.ddmeng.zhihudaily.data.models.response.StoryDetail> upstream) {
+                return upstream.map(new Function<com.ddmeng.zhihudaily.data.models.response.StoryDetail, StoryDetail>() {
+                    @Override
+                    public StoryDetail apply(@NonNull com.ddmeng.zhihudaily.data.models.response.StoryDetail storyDetail) throws Exception {
+                        LogUtils.i(TAG, "get detail from remote: " + storyDetail.getId());
+                        return detailConverter.convertStoryDetail(storyDetail);
+                    }
+                });
+            }
+        };
     }
 }

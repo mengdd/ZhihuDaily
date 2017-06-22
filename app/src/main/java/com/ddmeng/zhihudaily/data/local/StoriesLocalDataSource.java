@@ -2,13 +2,19 @@ package com.ddmeng.zhihudaily.data.local;
 
 import com.ddmeng.zhihudaily.data.StoriesDataSource;
 import com.ddmeng.zhihudaily.data.models.db.Story;
+import com.ddmeng.zhihudaily.data.models.db.StoryDetail;
+import com.ddmeng.zhihudaily.data.models.db.StoryDetail_Table;
 import com.ddmeng.zhihudaily.data.models.db.Story_Table;
 import com.ddmeng.zhihudaily.data.models.display.DisplayStories;
 import com.ddmeng.zhihudaily.utils.DateUtils;
 import com.ddmeng.zhihudaily.utils.LogUtils;
+import com.raizlabs.android.dbflow.config.DatabaseDefinition;
 import com.raizlabs.android.dbflow.config.FlowManager;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
+import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper;
 import com.raizlabs.android.dbflow.structure.database.transaction.FastStoreModelTransaction;
+import com.raizlabs.android.dbflow.structure.database.transaction.ITransaction;
+import com.raizlabs.android.dbflow.structure.database.transaction.Transaction;
 
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -55,6 +61,18 @@ public class StoriesLocalDataSource implements StoriesDataSource {
     }
 
     @Override
+    public Observable<StoryDetail> getNewsDetail(final String id) {
+        return Observable.fromCallable(new Callable<StoryDetail>() {
+            @Override
+            public StoryDetail call() throws Exception {
+                StoryDetail storyDetail = SQLite.select().from(StoryDetail.class).where(StoryDetail_Table.id.eq(id)).querySingle();
+                LogUtils.i(TAG, "query from local " + (storyDetail != null ? storyDetail.getId() : "but not found: " + id));
+                return storyDetail;
+            }
+        });
+    }
+
+    @Override
     public void saveNews(DisplayStories displayStories) {
         LogUtils.i(TAG, "save to local: " + displayStories);
         List<Story> listStories = displayStories.getListStories();
@@ -65,5 +83,32 @@ public class StoriesLocalDataSource implements StoriesDataSource {
                 .addAll(topStories)
                 .build()
                 .execute(FlowManager.getDatabase(ZhihuDatabase.class).getWritableDatabase());
+    }
+
+    @Override
+    public void saveDetail(final StoryDetail detail) {
+        DatabaseDefinition database = FlowManager.getDatabase(ZhihuDatabase.class);
+        Transaction transaction = database
+                .beginTransactionAsync(new ITransaction() {
+                    @Override
+                    public void execute(DatabaseWrapper databaseWrapper) {
+                        LogUtils.d(TAG, "save detail to local: " + detail.getId());
+                        detail.save();
+                    }
+                })
+                .success(new Transaction.Success() {
+                    @Override
+                    public void onSuccess(Transaction transaction) {
+                        LogUtils.d(TAG, "onSuccess");
+                    }
+                })
+                .error(new Transaction.Error() {
+                    @Override
+                    public void onError(Transaction transaction, Throwable error) {
+                        LogUtils.e(TAG, "onError: " + error);
+                    }
+                })
+                .build();
+        transaction.execute();
     }
 }

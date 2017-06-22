@@ -22,11 +22,15 @@ import android.widget.TextView;
 
 import com.ddmeng.zhihudaily.R;
 import com.ddmeng.zhihudaily.ZhihuDailyApplication;
-import com.ddmeng.zhihudaily.data.models.response.StoryDetail;
+import com.ddmeng.zhihudaily.data.StoriesRepository;
+import com.ddmeng.zhihudaily.data.models.db.StoryDetail;
 import com.ddmeng.zhihudaily.imageloader.ImageLoader;
 import com.ddmeng.zhihudaily.imageloader.ImageLoaderFactory;
+import com.ddmeng.zhihudaily.injection.component.MainComponent;
 import com.ddmeng.zhihudaily.utils.LogUtils;
 import com.ddmeng.zhihudaily.utils.WebUtils;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -46,6 +50,10 @@ public class NewsDetailFragment extends Fragment implements NewsDetailContract.V
     @BindView(R.id.web_view)
     WebView webView;
 
+
+    @Inject
+    StoriesRepository storiesRepository;
+
     private NewsDetailContract.Presenter presenter;
     private ImageLoader imageLoader;
 
@@ -61,12 +69,14 @@ public class NewsDetailFragment extends Fragment implements NewsDetailContract.V
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ImageLoaderFactory imageLoaderFactory = ((ZhihuDailyApplication) getActivity()
-                .getApplication()).getMainComponent().getImageLoaderFactory();
+        MainComponent mainComponent = ((ZhihuDailyApplication) getActivity()
+                .getApplication()).getMainComponent();
+        ImageLoaderFactory imageLoaderFactory = mainComponent.getImageLoaderFactory();
         imageLoader = imageLoaderFactory.createImageLoader(this);
+        mainComponent.inject(this);
         Bundle args = getArguments();
         String id = args.getString(ARG_ID);
-        presenter = new NewsDetailPresenter(id);
+        presenter = new NewsDetailPresenter(id, storiesRepository);
     }
 
     @Override
@@ -131,7 +141,7 @@ public class NewsDetailFragment extends Fragment implements NewsDetailContract.V
 
     @Override
     public void setNewsDetail(StoryDetail storyDetail) {
-        imageLoader.load(storyDetail.getImage(), topImageView);
+        imageLoader.load(storyDetail.getDetailImage(), topImageView);
         titleView.setText(storyDetail.getTitle());
 
         String htmlWithCss = WebUtils.buildHtmlWithCss(storyDetail.getBody(), storyDetail.getCss());
