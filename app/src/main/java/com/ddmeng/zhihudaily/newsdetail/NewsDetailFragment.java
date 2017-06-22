@@ -153,6 +153,7 @@ public class NewsDetailFragment extends Fragment implements NewsDetailContract.V
     public void onDestroyView() {
         super.onDestroyView();
         presenter.detachView();
+        presenter.dispose();
     }
 
     private void initToolbar() {

@@ -18,5 +18,7 @@ public interface NewsDetailContract {
         void fetchNewsDetail();
 
         String getShareUrl();
+
+        void dispose();
     }
 }

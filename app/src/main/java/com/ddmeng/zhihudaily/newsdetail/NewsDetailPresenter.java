@@ -4,10 +4,9 @@ import com.ddmeng.zhihudaily.data.StoriesRepository;
 import com.ddmeng.zhihudaily.data.models.db.StoryDetail;
 import com.ddmeng.zhihudaily.utils.LogUtils;
 
-import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
-import io.reactivex.disposables.Disposable;
+import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
 
 public class NewsDetailPresenter implements NewsDetailContract.Presenter {
@@ -16,6 +15,7 @@ public class NewsDetailPresenter implements NewsDetailContract.Presenter {
     private StoriesRepository storiesRepository;
     private String id;
     private String shareUrl;
+    private DisposableObserver<StoryDetail> disposableObserver;
 
     public NewsDetailPresenter(String id, StoriesRepository storiesRepository) {
         this.id = id;
@@ -39,14 +39,10 @@ public class NewsDetailPresenter implements NewsDetailContract.Presenter {
 
     @Override
     public void fetchNewsDetail() {
-        storiesRepository.getNewsDetail(id)
+        disposableObserver = storiesRepository.getNewsDetail(id)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<StoryDetail>() {
-                    @Override
-                    public void onSubscribe(@NonNull Disposable d) {
-
-                    }
+                .subscribeWith(new DisposableObserver<StoryDetail>() {
 
                     @Override
                     public void onNext(@NonNull StoryDetail storyDetail) {
@@ -74,5 +70,10 @@ public class NewsDetailPresenter implements NewsDetailContract.Presenter {
     @Override
     public String getShareUrl() {
         return shareUrl;
+    }
+
+    @Override
+    public void dispose() {
+        disposableObserver.dispose();
     }
 }
