@@ -2,7 +2,7 @@ package com.ddmeng.zhihudaily.newsdetail;
 
 import com.ddmeng.zhihudaily.base.BasePresenter;
 import com.ddmeng.zhihudaily.base.BaseView;
-import com.ddmeng.zhihudaily.data.models.StoryDetail;
+import com.ddmeng.zhihudaily.data.models.db.StoryDetail;
 
 public interface NewsDetailContract {
 
@@ -18,5 +18,7 @@ public interface NewsDetailContract {
         void fetchNewsDetail();
 
         String getShareUrl();
+
+        void dispose();
     }
 }

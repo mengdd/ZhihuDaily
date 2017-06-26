@@ -4,7 +4,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import com.ddmeng.zhihudaily.R;
-import com.ddmeng.zhihudaily.data.models.Story;
+import com.ddmeng.zhihudaily.data.models.db.Story;
 import com.ddmeng.zhihudaily.imageloader.ImageLoader;
 import com.ddmeng.zhihudaily.utils.LogUtils;
 import com.ddmeng.zhihudaily.widget.AutoScrollViewPager;

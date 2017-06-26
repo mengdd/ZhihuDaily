@@ -1,5 +1,7 @@
 package com.ddmeng.zhihudaily.utils;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
@@ -15,6 +17,9 @@ public class WebUtils {
     private static final String CSS_LINK_FORMAT = "<link rel=\"stylesheet\" type=\"text/css\" href=\"%s\">";
     private static final String TOP_IMAGE_PLACEHOLDER_CLASS = "class=\"img-place-holder\"";
 
+    public static String buildHtmlWithCss(String htmlString, String cssUrl){
+        return buildHtmlWithCss(htmlString, Collections.singletonList(cssUrl));
+    }
     public static String buildHtmlWithCss(String htmlString, List<String> cssUrls) {
         StringBuilder stringBuilder = new StringBuilder();
         if (cssUrls != null) {

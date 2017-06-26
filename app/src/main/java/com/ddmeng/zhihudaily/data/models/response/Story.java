@@ -1,4 +1,4 @@
-package com.ddmeng.zhihudaily.data.models;
+package com.ddmeng.zhihudaily.data.models.response;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -15,7 +15,7 @@ public class Story {
     private String image;
     @SerializedName("type")
     @Expose
-    private Integer type;
+    private int type;
     @SerializedName("id")
     @Expose
     private String id;
@@ -27,7 +27,7 @@ public class Story {
     private String title;
     @SerializedName("multipic")
     @Expose
-    private Boolean multipic;
+    private boolean multiPic;
 
     public String getImage() {
         return image;
@@ -77,11 +77,11 @@ public class Story {
         this.title = title;
     }
 
-    public Boolean getMultipic() {
-        return multipic;
+    public Boolean getMultiPic() {
+        return multiPic;
     }
 
-    public void setMultipic(Boolean multipic) {
-        this.multipic = multipic;
+    public void setMultiPic(Boolean multiPic) {
+        this.multiPic = multiPic;
     }
 }

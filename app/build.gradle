@@ -42,6 +42,12 @@ dependencies {
     compile 'com.jakewharton.retrofit:retrofit2-rxjava2-adapter:1.0.0'
     compile 'com.github.bumptech.glide:glide:3.7.0'
     compile 'com.romandanylyk:pageindicatorview:0.1.2@aar'
+    annotationProcessor "com.github.Raizlabs.DBFlow:dbflow-processor:${dbflowVersion}"
+    compile "com.github.Raizlabs.DBFlow:dbflow-core:${dbflowVersion}"
+    compile "com.github.Raizlabs.DBFlow:dbflow:${dbflowVersion}"
+    compile "com.github.Raizlabs.DBFlow:dbflow-rx2:${dbflowVersion}"
+    compile 'com.facebook.stetho:stetho:1.5.0'
+    compile 'joda-time:joda-time:2.9.9'
 
     testCompile 'junit:junit:4.12'
 }

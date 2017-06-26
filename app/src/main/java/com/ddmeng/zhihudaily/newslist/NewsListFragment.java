@@ -16,11 +16,16 @@ import android.view.ViewGroup;
 import com.ddmeng.zhihudaily.MainActivity;
 import com.ddmeng.zhihudaily.R;
 import com.ddmeng.zhihudaily.ZhihuDailyApplication;
-import com.ddmeng.zhihudaily.data.models.DailyNews;
+import com.ddmeng.zhihudaily.data.StoriesRepository;
+import com.ddmeng.zhihudaily.data.models.display.DisplayStories;
 import com.ddmeng.zhihudaily.imageloader.ImageLoader;
 import com.ddmeng.zhihudaily.imageloader.ImageLoaderFactory;
+import com.ddmeng.zhihudaily.injection.component.MainComponent;
 import com.ddmeng.zhihudaily.newsdetail.NewsDetailFragment;
 import com.ddmeng.zhihudaily.utils.LogUtils;
+import com.ddmeng.zhihudaily.widget.EndlessRecyclerViewScrollListener;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -37,9 +42,13 @@ public class NewsListFragment extends Fragment implements NewsListContract.View,
     @BindView(R.id.swipe_refresh_layout)
     SwipeRefreshLayout swipeRefreshLayout;
 
+    @Inject
+    StoriesRepository storiesRepository;
+
     private NewsListContract.Presenter presenter;
     private NewsListAdapter newsListAdapter;
     private ImageLoader imageLoader;
+    private EndlessRecyclerViewScrollListener endlessRecyclerViewScrollListener;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -50,10 +59,13 @@ public class NewsListFragment extends Fragment implements NewsListContract.View,
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         ButterKnife.bind(this, view);
-        ImageLoaderFactory imageLoaderFactory = ((ZhihuDailyApplication) getActivity()
-                .getApplication()).getMainComponent().getImageLoaderFactory();
+        MainComponent mainComponent = ((ZhihuDailyApplication) getActivity()
+                .getApplication()).getMainComponent();
+        ImageLoaderFactory imageLoaderFactory = mainComponent.getImageLoaderFactory();
         imageLoader = imageLoaderFactory.createImageLoader(this);
-        presenter = new NewsListPresenter();
+        mainComponent.inject(this);
+
+        presenter = new NewsListPresenter(storiesRepository);
         presenter.attachView(this);
         presenter.init();
         presenter.fetchLatestNews();
@@ -64,14 +76,24 @@ public class NewsListFragment extends Fragment implements NewsListContract.View,
         toolbar.setTitle(R.string.home);
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         setHasOptionsMenu(true);
-        newsList.setLayoutManager(new LinearLayoutManager(getContext()));
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+        newsList.setLayoutManager(layoutManager);
         newsListAdapter = new NewsListAdapter(imageLoader, this);
         newsList.setAdapter(newsListAdapter);
+        endlessRecyclerViewScrollListener = new EndlessRecyclerViewScrollListener(layoutManager) {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+                LogUtils.d(TAG, "onLoadMore: page: " + page + ", totalItemsCount: " + totalItemsCount);
+                presenter.onLoadMore(page);
+            }
+        };
+        newsList.addOnScrollListener(endlessRecyclerViewScrollListener);
 
         swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                endlessRecyclerViewScrollListener.resetState();
                 presenter.onRefresh();
             }
         });
@@ -83,14 +105,20 @@ public class NewsListFragment extends Fragment implements NewsListContract.View,
     }
 
     @Override
-    public void setDailyNews(DailyNews dailyNews) {
-        LogUtils.i(TAG, "setDailyNews: " + dailyNews.getStories().size());
-        newsListAdapter.setDailyNews(dailyNews);
+    public void setDisplayStories(DisplayStories displayStories) {
+        newsListAdapter.setDisplayStories(displayStories);
+        newsListAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void appendDisplayStories(DisplayStories displayStories) {
+        newsListAdapter.appendDisplayStories(displayStories);
         newsListAdapter.notifyDataSetChanged();
     }
 
     @Override
     public void onDestroyView() {
+        presenter.dispose();
         presenter.detachView();
         super.onDestroyView();
     }
