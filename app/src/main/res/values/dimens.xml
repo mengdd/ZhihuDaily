@@ -17,4 +17,6 @@
     <dimen name="top_story_text_size">20sp</dimen>
     <dimen name="top_story_indicator_margin_bottom">8dp</dimen>
     <dimen name="pager_indicator_dot_radius">4dp</dimen>
+    <dimen name="date_header_margin_horizontal">8dp</dimen>
+    <dimen name="date_header_padding">8dp</dimen>
 </resources>

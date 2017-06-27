@@ -48,6 +48,7 @@ dependencies {
     compile "com.github.Raizlabs.DBFlow:dbflow-rx2:${dbflowVersion}"
     compile 'com.facebook.stetho:stetho:1.5.0'
     compile 'joda-time:joda-time:2.9.9'
+    compile 'com.timehop.stickyheadersrecyclerview:library:0.4.3'
 
     testCompile 'junit:junit:4.12'
 }

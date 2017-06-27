@@ -12,6 +12,7 @@ Zhihu Daily Android app, a practice project to use MVP, RxJava, DBFlow, etc.
 - [DBFLow](https://github.com/Raizlabs/DBFlow)
 - [Stetho](http://facebook.github.io/stetho/)
 - [Joda-Time](https://github.com/JodaOrg/joda-time)
+- [sticky-headers-recyclerview](https://github.com/timehop/sticky-headers-recyclerview)
 
 
 ## API
