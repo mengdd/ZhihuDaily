@@ -56,7 +56,7 @@ public class NewsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         switch (viewType) {
             case VIEW_TYPE_TOP_NEWS: {
                 View view = layoutInflater.inflate(R.layout.top_stories_view_holder, parent, false);
-                return new TopStoriesViewHolder(view, imageLoader);
+                return new TopStoriesViewHolder(view, imageLoader, callback);
             }
             case VIEW_TYPE_STORY: {
                 View view = layoutInflater.inflate(R.layout.story_view_holder, parent, false);
