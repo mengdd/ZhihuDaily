@@ -24,6 +24,7 @@ import com.ddmeng.zhihudaily.injection.component.MainComponent;
 import com.ddmeng.zhihudaily.newsdetail.NewsDetailFragment;
 import com.ddmeng.zhihudaily.utils.LogUtils;
 import com.ddmeng.zhihudaily.widget.EndlessRecyclerViewScrollListener;
+import com.ddmeng.zhihudaily.widget.ItemDecoration.HeaderDecoration;
 
 import javax.inject.Inject;
 
@@ -80,6 +81,14 @@ public class NewsListFragment extends Fragment implements NewsListContract.View,
         newsList.setLayoutManager(layoutManager);
         newsListAdapter = new NewsListAdapter(imageLoader, this);
         newsList.setAdapter(newsListAdapter);
+        final HeaderDecoration decoration = new HeaderDecoration(newsListAdapter);
+        newsList.addItemDecoration(decoration);
+        newsListAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+            @Override
+            public void onChanged() {
+                decoration.invalidateHeaders();
+            }
+        });
         endlessRecyclerViewScrollListener = new EndlessRecyclerViewScrollListener(layoutManager) {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {

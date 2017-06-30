@@ -7,4 +7,5 @@
     <string name="action_star">star</string>
     <string name="action_comments">comments</string>
     <string name="action_thumb_up">thumbs up</string>
+    <string name="date_header_format">EEE, d MMM</string>
 </resources>
