@@ -1,5 +1,9 @@
 package com.ddmeng.zhihudaily.utils;
 
+import android.content.Context;
+
+import com.ddmeng.zhihudaily.R;
+
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -31,5 +35,16 @@ public class DateUtils {
 
     public static DateTime getDateTime(String date) {
         return DATE_TIME_FORMATTER.parseDateTime(date);
+    }
+
+    public static String getDateDisplayTitle(Context context, String date) {
+        String displayPattern = context.getString(R.string.date_header_format);
+        DateTime dateTime = DateUtils.getDateTime(date);
+        String displayDateString = dateTime.toString(displayPattern);
+        if (displayDateString.equals(new DateTime().toString(displayPattern))) {
+            return context.getString(R.string.today_news);
+        } else {
+            return displayDateString;
+        }
     }
 }

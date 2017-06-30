@@ -88,6 +88,10 @@ public class NewsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         return displayStories != null ? displayStories.getListStories().size() + 1 : 0;
     }
 
+    public String getCurrentTitle(int position) {
+        return getItemHeader(position);
+    }
+
     @Override
     public long getHeaderId(int position) {
         String header = getItemHeader(position);
@@ -125,7 +129,6 @@ public class NewsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         if (!headers.contains(header)) {
             headers.add(header);
             return headers.size() - 1;
-
         }
         return headers.indexOf(header);
     }

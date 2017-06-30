@@ -8,4 +8,5 @@
     <string name="action_comments">评论</string>
     <string name="action_thumb_up">赞</string>
     <string name="date_header_format">MM月d日 EEEE</string>
+    <string name="today_news">今日热闻</string>
 </resources>
