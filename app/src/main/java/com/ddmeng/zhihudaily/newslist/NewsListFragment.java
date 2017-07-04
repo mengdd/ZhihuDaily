@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,8 +23,10 @@ import com.ddmeng.zhihudaily.imageloader.ImageLoader;
 import com.ddmeng.zhihudaily.imageloader.ImageLoaderFactory;
 import com.ddmeng.zhihudaily.injection.component.MainComponent;
 import com.ddmeng.zhihudaily.newsdetail.NewsDetailFragment;
+import com.ddmeng.zhihudaily.utils.DateUtils;
 import com.ddmeng.zhihudaily.utils.LogUtils;
 import com.ddmeng.zhihudaily.widget.EndlessRecyclerViewScrollListener;
+import com.ddmeng.zhihudaily.widget.ItemDecoration.HeaderDecoration;
 
 import javax.inject.Inject;
 
@@ -49,6 +52,7 @@ public class NewsListFragment extends Fragment implements NewsListContract.View,
     private NewsListAdapter newsListAdapter;
     private ImageLoader imageLoader;
     private EndlessRecyclerViewScrollListener endlessRecyclerViewScrollListener;
+    private LinearLayoutManager linearLayoutManager;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -76,11 +80,19 @@ public class NewsListFragment extends Fragment implements NewsListContract.View,
         toolbar.setTitle(R.string.home);
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         setHasOptionsMenu(true);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
-        newsList.setLayoutManager(layoutManager);
+        linearLayoutManager = new LinearLayoutManager(getContext());
+        newsList.setLayoutManager(linearLayoutManager);
         newsListAdapter = new NewsListAdapter(imageLoader, this);
         newsList.setAdapter(newsListAdapter);
-        endlessRecyclerViewScrollListener = new EndlessRecyclerViewScrollListener(layoutManager) {
+        final HeaderDecoration decoration = new HeaderDecoration(newsListAdapter);
+        newsList.addItemDecoration(decoration);
+        newsListAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+            @Override
+            public void onChanged() {
+                decoration.invalidateHeaders();
+            }
+        });
+        endlessRecyclerViewScrollListener = new EndlessRecyclerViewScrollListener(linearLayoutManager) {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
                 LogUtils.d(TAG, "onLoadMore: page: " + page + ", totalItemsCount: " + totalItemsCount);
@@ -88,6 +100,18 @@ public class NewsListFragment extends Fragment implements NewsListContract.View,
             }
         };
         newsList.addOnScrollListener(endlessRecyclerViewScrollListener);
+        newsList.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                int firstVisibleItemPosition = linearLayoutManager.findFirstVisibleItemPosition();
+                String currentTitle = newsListAdapter.getCurrentTitle(firstVisibleItemPosition);
+                if (TextUtils.isEmpty(currentTitle)) {
+                    toolbar.setTitle(R.string.home);
+                } else {
+                    toolbar.setTitle(DateUtils.getDateDisplayTitle(getContext(), currentTitle));
+                }
+            }
+        });
 
         swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {

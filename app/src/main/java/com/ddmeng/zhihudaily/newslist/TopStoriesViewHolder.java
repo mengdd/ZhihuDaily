@@ -22,10 +22,10 @@ public class TopStoriesViewHolder extends RecyclerView.ViewHolder {
     AutoScrollViewPager topStoriesPager;
     private final TopStoriesPagerAdapter adapter;
 
-    public TopStoriesViewHolder(View itemView, ImageLoader imageLoader) {
+    public TopStoriesViewHolder(View itemView, ImageLoader imageLoader, NewsListAdapter.Callback callback) {
         super(itemView);
         ButterKnife.bind(this, itemView);
-        adapter = new TopStoriesPagerAdapter(imageLoader);
+        adapter = new TopStoriesPagerAdapter(imageLoader, callback);
         topStoriesPager.setAdapter(adapter);
         topStoriesPager.startAutoScroll();
     }
